@@ -5,7 +5,7 @@ import {
   TableCell, TableRow, TextField,
   FormControl, Select, Input,
   MenuItem, Checkbox, ListItemText,
-  InputAdornment, Icon, Tooltip,
+  InputAdornment, Icon, Tooltip, Paper, OutlinedInput
 } from '@material-ui/core';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, TimePicker, DatePicker, DateTimePicker } from '@material-ui/pickers';
@@ -30,7 +30,7 @@ class MTableFilterRow extends React.Component {
         onChange={event => {
           this.props.onFilterChanged(columnDef.tableData.id, event.target.value);
         }}
-        input={<Input id="select-multiple-checkbox" />}
+        input={<OutlinedInput id="select-multiple-checkbox" style={{width:200}} />}
         renderValue={selecteds => selecteds.map(selected => columnDef.lookup[selected]).join(', ')}
         MenuProps={MenuProps}
       >
@@ -146,7 +146,7 @@ class MTableFilterRow extends React.Component {
       .filter(columnDef => !columnDef.hidden && !(columnDef.tableData.groupOrder > -1))
       .sort((a, b) => a.tableData.columnOrder - b.tableData.columnOrder)
       .map(columnDef => (
-        <TableCell key={columnDef.tableData.id} style={{ ...this.props.filterCellStyle, ...columnDef.filterCellStyle }}>
+        <TableCell key={columnDef.tableData.id} style={{ minWidth: 0, padding: "0 10 0 10", border: 0 }}>
           {this.getComponentForColumn(columnDef)}
         </TableCell>
       ));
@@ -154,7 +154,7 @@ class MTableFilterRow extends React.Component {
     if (this.props.selection) {
       columns.splice(0, 0, <TableCell padding="none" key="key-selection-column"/>);
     }
-    
+
     if (this.props.emptyCell && this.props.hasActions) {
       if (this.props.actionsColumnIndex === -1) {
         columns.push(<TableCell key="key-action-column" />);

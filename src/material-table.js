@@ -443,39 +443,67 @@ export default class MaterialTable extends React.Component {
 
   render() {
     const props = this.getProps();
-
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
-        <props.components.Container style={{ position: 'relative', ...props.style }}>
-          {props.options.toolbar &&
-            <props.components.Toolbar
+        {props.options.toolbar &&
+        <props.components.Toolbar
+          actions={props.actions}
+          components={props.components}
+          selectedRows={this.state.selectedCount > 0 ? this.state.originalData.filter(a => { return a.tableData.checked }) : []}
+          columns={this.state.columns}
+          columnsButton={props.options.columnsButton}
+          icons={props.icons}
+          exportAllData={props.options.exportAllData}
+          exportButton={props.options.exportButton}
+          exportDelimiter={props.options.exportDelimiter}
+          exportFileName={props.options.exportFileName}
+          exportCsv={props.options.exportCsv}
+          getFieldValue={this.dataManager.getFieldValue}
+          data={this.state.data}
+          renderData={this.state.renderData}
+          search={props.options.search}
+          showTitle={props.options.showTitle}
+          showTextRowsSelected={props.options.showTextRowsSelected}
+          toolbarButtonAlignment={props.options.toolbarButtonAlignment}
+          searchFieldAlignment={props.options.searchFieldAlignment}
+          searchText={this.state.searchText}
+          searchFieldStyle={props.options.searchFieldStyle}
+          title={props.title}
+          onSearchChanged={this.onSearchChange}
+          onColumnsChanged={this.onChangeColumnHidden}
+          localization={{ ...MaterialTable.defaultProps.localization.toolbar, ...this.props.localization.toolbar }}
+        >
+            <props.components.Filter
               actions={props.actions}
               components={props.components}
-              selectedRows={this.state.selectedCount > 0 ? this.state.originalData.filter(a => { return a.tableData.checked }) : []}
-              columns={this.state.columns}
-              columnsButton={props.options.columnsButton}
               icons={props.icons}
-              exportAllData={props.options.exportAllData}
-              exportButton={props.options.exportButton}
-              exportDelimiter={props.options.exportDelimiter}
-              exportFileName={props.options.exportFileName}
-              exportCsv={props.options.exportCsv}
-              getFieldValue={this.dataManager.getFieldValue}
-              data={this.state.data}
               renderData={this.state.renderData}
-              search={props.options.search}
-              showTitle={props.options.showTitle}
-              showTextRowsSelected={props.options.showTextRowsSelected}
-              toolbarButtonAlignment={props.options.toolbarButtonAlignment}
-              searchFieldAlignment={props.options.searchFieldAlignment}
-              searchText={this.state.searchText}
-              searchFieldStyle={props.options.searchFieldStyle}
-              title={props.title}
-              onSearchChanged={this.onSearchChange}
-              onColumnsChanged={this.onChangeColumnHidden}
-              localization={{ ...MaterialTable.defaultProps.localization.toolbar, ...this.props.localization.toolbar }}
+              currentPage={this.state.currentPage}
+              initialFormData={props.initialFormData}
+              pageSize={this.state.pageSize}
+              columns={this.state.columns}
+              detailPanel={props.detailPanel}
+              options={props.options}
+              getFieldValue={this.dataManager.getFieldValue}
+              isTreeData={this.props.parentChildData !== undefined}
+              onFilterChanged={this.onFilterChange}
+              onRowSelected={this.onRowSelected}
+              onToggleDetailPanel={this.onToggleDetailPanel}
+              onGroupExpandChanged={this.onGroupExpandChanged}
+              onTreeExpandChanged={this.onTreeExpandChanged}
+              onEditingCanceled={this.onEditingCanceled}
+              onEditingApproved={this.onEditingApproved}
+              localization={{ ...MaterialTable.defaultProps.localization.body, ...this.props.localization.body }}
+              onRowClick={this.props.onRowClick}
+              showAddRow={this.state.showAddRow}
+              hasAnyEditingRow={!!(this.state.lastEditingRow || this.state.showAddRow)}
+              hasDetailPanel={!!props.detailPanel}
+              treeDataMaxLevel={this.state.treeDataMaxLevel}
             />
-          }
+        </props.components.Toolbar>
+        }
+        <props.components.Container style={{ position: 'relative', ...props.style }}>
+
           {props.options.grouping &&
             <props.components.Groupbar
               icons={props.icons}

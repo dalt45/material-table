@@ -5,7 +5,7 @@ export default class DataManager {
   applyFilters = false;
   applySearch = false;
   currentPage = 0;
-  detailPanelType = 'multiple'  
+  detailPanelType = 'multiple'
   lastDetailPanelRow = undefined;
   lastEditingRow = undefined;
   orderBy = -1;
@@ -20,7 +20,9 @@ export default class DataManager {
   defaultExpanded = false;
 
   data = [];
-  columns = [];
+  columns = [
+
+  ];
 
   filteredData = [];
   searchedData = [];
@@ -272,7 +274,7 @@ export default class DataManager {
       if(newGroup.grouping === false || !newGroup.field){
         return;
       }
-      
+
       groups.splice(result.destination.index, 0, newGroup);
     }
     else if (result.destination.droppableId === "headers" && result.source.droppableId === "groups") {

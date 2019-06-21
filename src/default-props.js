@@ -25,6 +25,7 @@ export const defaultProps = {
     Action: MComponents.MTableAction,
     Actions: MComponents.MTableActions,
     Body: MComponents.MTableBody,
+    Filter: MComponents.MTableFilter,
     Cell: MComponents.MTableCell,
     Container: Container,
     EditField: MComponents.MTableEditField,

@@ -4,158 +4,201 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import MaterialTable from '../src';
 
-let direction = 'ltr';
-// direction = 'rtl';
-const theme = createMuiTheme({
-  direction: direction,
-  palette: {
-    type: 'light'
-  }
-});
+const styles = () => (
+  <style jsx>{`
+    .search-container {
+      margin-top: 65px;
+    }
+  `}</style>
+);
 
-const bigData = [];
-for (let i = 0; i < 1; i++) {
-  const d = {
-    id: i + 1,
-    name: 'Name' + i,
-    surname: 'Surname' + Math.round(i / 10),
-    isMarried: i % 2 ? true : false,
-    birthDate: new Date(1987, 1, 1),
-    birthCity: 0,
-    sex: i % 2 ? 'Male' : 'Female',
-    type: 'adult',
-    insertDateTime: new Date(2018, 1, 1, 12, 23, 44),
-    time: new Date(1900, 1, 1, 14, 23, 35)
-  };
-  bigData.push(d);
-}
-
-class App extends Component {
-  tableRef = React.createRef();
-
-  colRenderCount = 0;
-
-  state = {
-    text: 'text',
-    selecteds: 0,
-    data: [
-      { id: 1, name: 'A1', surname: 'B', isMarried: true, birthDate: new Date(1987, 1, 1), birthCity: 0, sex: 'Male', type: 'adult', insertDateTime: new Date(2018, 1, 1, 12, 23, 44), time: new Date(1900, 1, 1, 14, 23, 35) },
-      { id: 2, name: 'A2', surname: 'B', isMarried: false, birthDate: new Date(1987, 1, 1), birthCity: 34, sex: 'Female', type: 'adult', insertDateTime: new Date(2018, 1, 1, 12, 23, 44), time: new Date(1900, 1, 1, 14, 23, 35), parentId: 1 },
-      { id: 3, name: 'A3', surname: 'B', isMarried: true, birthDate: new Date(1987, 1, 1), birthCity: 34, sex: 'Female', type: 'child', insertDateTime: new Date(2018, 1, 1, 12, 23, 44), time: new Date(1900, 1, 1, 14, 23, 35), parentId: 1 },
-      { id: 4, name: 'A4', surname: 'C', isMarried: true, birthDate: new Date(1987, 1, 1), birthCity: 34, sex: 'Female', type: 'child', insertDateTime: new Date(2018, 1, 1, 12, 23, 44), time: new Date(1900, 1, 1, 14, 23, 35), parentId: 3 },
-      { id: 5, name: 'A5', surname: 'C', isMarried: false, birthDate: new Date(1987, 1, 1), birthCity: 34, sex: 'Female', type: 'child', insertDateTime: new Date(2018, 1, 1, 12, 23, 44), time: new Date(1900, 1, 1, 14, 23, 35) },
-      { id: 6, name: 'A6', surname: 'C', isMarried: true, birthDate: new Date(1989, 1, 1), birthCity: 34, sex: 'Female', type: 'child', insertDateTime: new Date(2018, 1, 1, 12, 23, 44), time: new Date(1900, 1, 1, 14, 23, 35), parentId: 5 },
-    ],
-    columns: [
-      {
-        title: 'Adı', field: 'name', editComponent: props => {
-          return (
-            <input
-              value={props.value}
-              onChange={e => {
-                var data = { ...props.rowData };
-                data.name = e.target.value;
-                data.surname = e.target.value.toLocaleUpperCase();
-                props.onRowDataChange(data);
-              }}
-            />
-          )
-        }
-      },
-      {
-        title: 'Soyadı', field: 'surname', editComponent: props => {
-          this.inputBProps = props;
-          return (
-            <input
-              value={props.value}
-              onChange={e => props.onChange(e.target.value)}
-            />
-          )
-        }
-      },
-      { title: 'Evli', field: 'isMarried', type: 'boolean' },
-      { title: 'Cinsiyet', field: 'sex', disableClick: true, editable: 'onAdd' },
-      { title: 'Tipi', field: 'type', removable: false, editable: 'never' },
-      { title: 'Doğum Yılı', field: 'birthDate', type: 'date' },
-      { title: 'Doğum Yeri', field: 'birthCity', lookup: { 34: 'İstanbul', 0: 'Şanlıurfa' } },
-      { title: 'Kayıt Tarihi', field: 'insertDateTime', type: 'datetime' },
-      { title: 'Zaman', field: 'time', type: 'time' }
-    ],
-    remoteColumns: [
-      { title: 'Avatar', field: 'avatar', render: rowData => <img style={{ height: 36, borderRadius: '50%' }} src={rowData.avatar} /> },
-      { title: 'Id', field: 'id' },
-      { title: 'First Name', field: 'first_name', defaultFilter: 'De' },
-      { title: 'Last Name', field: 'last_name' },
-    ]
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      columns: [
+        { title: 'Fecha de registro', field: 'data', filtering: false },
+        { title: 'Nombre de la institución', field: 'name', filtering: false },
+        { title: 'Programa de fortalecimiento', field: 'program' },
+        {
+          title: 'Estado',
+          field: 'status',
+          lookup: {
+            1: 'Nuevo aspirante',
+            2: 'Esperando ficha',
+            3: 'Esperando descriptores',
+            4: 'Esperando evidencias',
+            5: 'Redactando reporte',
+            6: 'Reporte enviado',
+          },
+        },
+        { title: 'Persona de contacto', field: 'person' },
+        { title: 'Correo', field: 'email', filtering: false },
+      ],
+      data: [
+        {
+          data: '05/06/19',
+          name: 'Fundacion Merced',
+          program: 'Propio',
+          status: 1,
+          person: 'Ana Ruíz Camacho',
+          email: 'correo@ejemplo.mx',
+        },
+        {
+          data: '05/06/19',
+          name: 'Fundacion MacBook',
+          program: 'Propio',
+          status: 2,
+          person: 'Ana Ruíz Camacho',
+          email: 'correo@ejemplo.mx',
+        },
+        {
+          data: '05/06/19',
+          name: 'Fundacion Perez',
+          program: 'Propio',
+          status: 1,
+          person: 'Ana Ruíz Camacho',
+          email: 'correo@ejemplo.mx',
+        },
+        {
+          data: '05/06/19',
+          name: 'Fundacion ',
+          program: 'Propio',
+          status: 4,
+          person: 'Ana Ruíz Camacho',
+          email: 'correo@ejemplo.mx',
+        },
+        {
+          data: '05/06/19',
+          name: 'Fundacion Merced',
+          program: 'Propio',
+          status: 5,
+          person: 'Ana Ruíz Camacho',
+          email: 'correo@ejemplo.mx',
+        },
+        {
+          data: '05/06/19',
+          name: 'Fundacion Merced',
+          program: 'Propio',
+          status: 5,
+          person: 'Ana Ruíz Camacho',
+          email: 'correo@ejemplo.mx',
+        },
+        {
+          data: '05/06/19',
+          name: 'Fundacion Merced',
+          program: 'Propio',
+          status: 6,
+          person: 'Ana Ruíz Camacho',
+          email: 'correo@ejemplo.mx',
+        },
+        {
+          data: '05/06/19',
+          name: 'Fundacion Merced',
+          program: 'Propio',
+          status: 3,
+          person: 'Ana Ruíz Camacho',
+          email: 'correo@ejemplo.mx',
+        },
+        {
+          data: '05/06/19',
+          name: 'Fundacion Merced',
+          program: 'Propio',
+          status: 4,
+          person: 'Ana Ruíz Camacho',
+          email: 'correo@ejemplo.mx',
+        },
+        {
+          data: '05/06/19',
+          name: 'Fundacion Merced',
+          program: 'Propio',
+          status: 2,
+          person: 'Ana Ruíz Camacho',
+          email: 'correo@ejemplo.mx',
+        },
+        {
+          data: '05/06/19',
+          name: 'Fundacion Merced',
+          program: 'Propio',
+          status: 1,
+          person: 'Ana Ruíz Camacho',
+          email: 'correo@ejemplo.mx',
+        },
+        {
+          data: '05/06/19',
+          name: 'Fundacion Merced',
+          program: 'Propio',
+          status: 5,
+          person: 'Ana Ruíz Camacho',
+          email: 'correo@ejemplo.mx',
+        },
+        {
+          data: '05/06/19',
+          name: 'Fundacion ',
+          program: 'Propio',
+          status: 2,
+          person: 'Ana Ruíz Camacho',
+          email: 'correo@ejemplo.mx',
+        },
+        {
+          data: '05/06/19',
+          name: 'Fundacion Merced',
+          program: 'Propio',
+          status: 4,
+          person: 'Ana Ruíz Camacho',
+          email: 'correo@ejemplo.mx',
+        },
+      ],
+    };
   }
 
   render() {
     return (
-      <>
-        <MuiThemeProvider theme={theme}>
-          <div style={{ maxWidth: '100%', direction }}>
-            <Grid container>
-              <Grid item xs={12}>
-                <MaterialTable
-                  tableRef={this.tableRef}
-                  columns={this.state.columns}
-                  data={this.state.data}
-                  title="Demo Title"
-                  parentChildData={(row, rows) => rows.find(a => a.id === row.parentId)}
-                  options={{
-                    selection: true
-                  }}
-                />
-              </Grid>
-            </Grid>
-            {this.state.text}
-            <button onClick={() => this.tableRef.current.onAllSelected(true)} style={{ margin: 10 }}>
-              Select
-            </button>
-            <MaterialTable
-              title="Remote Data Preview"
-              columns={[
-                {
-                  title: 'Avatar',
-                  field: 'avatar',
-                  render: rowData => (
-                    <img
-                      style={{ height: 36, borderRadius: '50%' }}
-                      src={rowData.avatar}
-                    />
-                  ),
-                },
-                { title: 'Id', field: 'id' },
-                { title: 'First Name', field: 'first_name' },
-                { title: 'Last Name', field: 'last_name' },
-              ]}
-              options={{
-                grouping: true,
-                filtering: true
-              }}
-              data={query => new Promise((resolve, reject) => {
-                let url = 'https://reqres.in/api/users?'
-                url += 'per_page=' + query.pageSize
-                url += '&page=' + (query.page + 1)
-                console.log(query);
-                fetch(url)
-                  .then(response => response.json())
-                  .then(result => {
-                    resolve({
-                      data: result.data,
-                      page: result.page - 1,
-                      totalCount: result.total,
-                    })
-                  })
-              })}
-            />
-
-          </div>
-        </MuiThemeProvider>
-      </>
+      <div className="search-container">
+        {styles()}
+        <MaterialTable
+          columns={this.state.columns}
+          data={this.state.data}
+          onRowClick={(evt, selectedRow) => this.setState({ selectedRow })}
+          options={{
+            rowStyle: rowData => ({
+              backgroundColor:
+                this.state.selectedRow &&
+                this.state.selectedRow.tableData.id === rowData.tableData.id
+                  ? '#EEE'
+                  : '#FFF',
+            }),
+            headerStyle: {
+              backgroundColor: '#F57F85',
+              color: '#FFF',
+            },
+            searchFieldAlignment: 'left',
+            showTitle: false,
+            filtering: true,
+          }}
+          localization={{
+            body: {
+              emptyDataSourceMessage: 'Sin resultados',
+            },
+            toolbar: {
+              searchTooltip: 'Burscar',
+              searchPlaceholder: 'Buscar',
+            },
+            pagination: {
+              labelDisplayedRows: ' {from}-{to} de {count}',
+              firstTooltip: 'Primer Elemento',
+              previousTooltip: 'Regresa',
+              nextTooltip: 'Siguiente',
+              lastTooltip: 'Último elemento',
+            },
+          }}
+        />
+      </div>
     );
   }
 }
+
+
 
 ReactDOM.render(
   <App />,

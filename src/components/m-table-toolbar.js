@@ -189,10 +189,13 @@ export class MTableToolbar extends React.Component {
           <Typography variant="h6">{title}</Typography>
         </div>}
         {this.props.searchFieldAlignment === 'left' && this.renderSearch()}
+        {this.props.children}
         {this.props.toolbarButtonAlignment === 'left' && this.renderActions()}
+        <div className={classes.spacer} />
         <div className={classes.spacer} />
         {this.props.searchFieldAlignment === 'right' && this.renderSearch()}
         {this.props.toolbarButtonAlignment === 'right' && this.renderActions()}
+
       </Toolbar >
     );
   }

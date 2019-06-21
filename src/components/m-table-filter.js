@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 /* eslint-enable no-unused-vars */
 
-class MTableBody extends React.Component {
+class MTableFilter extends React.Component {
   renderEmpty(emptyRowCount, renderData) {
-    const localization = { ...MTableBody.defaultProps.localization, ...this.props.localization };
+    const localization = { ...MTableFilter.defaultProps.localization, ...this.props.localization };
     if (this.props.options.showEmptyDataSourceMessage && renderData.length === 0) {
       let addColumn = 0;
       if (this.props.options.selection || (this.props.actions && this.props.actions.filter(a => !a.isFreeAction && !this.props.options.selection).length > 0)) {
@@ -44,7 +44,7 @@ class MTableBody extends React.Component {
             components={this.props.components}
             data={data}
             icons={this.props.icons}
-            localization={{ ...MTableBody.defaultProps.localization.editRow, ...this.props.localization.editRow }}
+            localization={{ ...MTableFilter.defaultProps.localization.editRow, ...this.props.localization.editRow }}
             key={index}
             mode={data.tableData.editing}
             options={this.props.options}
@@ -66,7 +66,7 @@ class MTableBody extends React.Component {
             key={"row-" + data.tableData.id}
             level={0}
             options={this.props.options}
-            localization={{ ...MTableBody.defaultProps.localization.editRow, ...this.props.localization.editRow }}
+            localization={{ ...MTableFilter.defaultProps.localization.editRow, ...this.props.localization.editRow }}
             onRowSelected={this.props.onRowSelected}
             actions={this.props.actions}
             columns={this.props.columns}
@@ -126,54 +126,29 @@ class MTableBody extends React.Component {
       emptyRowCount = this.props.pageSize - renderData.length;
     }
     return (
-      <TableBody>
-        {this.props.showAddRow && this.props.options.addRowPosition === "first" &&
-          <this.props.components.EditRow
+      <div style={{justifyContent: "flex-start", width: "100%"}}>
+        {this.props.options.filtering &&
+          <this.props.components.FilterRow
             columns={this.props.columns.filter(columnDef => { return !columnDef.hidden })}
-            data={this.props.initialFormData}
-            components={this.props.components}
             icons={this.props.icons}
-            key="key-add-row"
-            mode="add"
-            localization={{ ...MTableBody.defaultProps.localization.editRow, ...this.props.localization.editRow }}
-            options={this.props.options}
+            emptyCell={this.props.options.selection || (this.props.actions && this.props.actions.filter(a => !a.isFreeAction && !this.props.options.selection).length > 0)}
+            hasActions={(this.props.actions && this.props.actions.filter(a => !a.isFreeAction && !this.props.options.selection).length > 0)}
+            actionsColumnIndex={this.props.options.actionsColumnIndex}
+            onFilterChanged={this.props.onFilterChanged}
+            selection={this.props.options.selection}
+            localization={{ ...MTableFilter.defaultProps.localization.filterRow, ...this.props.localization.filterRow }}
+            hasDetailPanel={!!this.props.detailPanel}
             isTreeData={this.props.isTreeData}
-            detailPanel={this.props.detailPanel}
-            onEditingCanceled={this.props.onEditingCanceled}
-            onEditingApproved={this.props.onEditingApproved}
-            getFieldValue={this.props.getFieldValue}
+            filterCellStyle={this.props.options.filterCellStyle}
           />
         }
+      </div>
 
-        {groups.length > 0 ?
-          this.renderGroupedRows(groups, renderData) :
-          this.renderUngroupedRows(renderData)
-        }
-
-        {this.props.showAddRow && this.props.options.addRowPosition === "last" &&
-          <this.props.components.EditRow
-            columns={this.props.columns.filter(columnDef => { return !columnDef.hidden })}
-            data={this.props.initialFormData}
-            components={this.props.components}
-            icons={this.props.icons}
-            key="key-add-row"
-            mode="add"
-            localization={{ ...MTableBody.defaultProps.localization.editRow, ...this.props.localization.editRow }}
-            options={this.props.options}
-            isTreeData={this.props.isTreeData}
-            detailPanel={this.props.detailPanel}
-            onEditingCanceled={this.props.onEditingCanceled}
-            onEditingApproved={this.props.onEditingApproved}
-            getFieldValue={this.props.getFieldValue}
-          />
-        }
-        {this.renderEmpty(emptyRowCount, renderData)}
-      </TableBody>
     );
   }
 }
 
-MTableBody.defaultProps = {
+MTableFilter.defaultProps = {
   actions: [],
   currentPage: 0,
   pageSize: 5,
@@ -186,7 +161,7 @@ MTableBody.defaultProps = {
   }
 };
 
-MTableBody.propTypes = {
+MTableFilter.propTypes = {
   actions: PropTypes.array,
   components: PropTypes.object.isRequired,
   columns: PropTypes.array.isRequired,
@@ -215,4 +190,4 @@ MTableBody.propTypes = {
   onEditingApproved: PropTypes.func,
 };
 
-export default MTableBody;
+export default MTableFilter;
