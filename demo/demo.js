@@ -19,7 +19,7 @@ export default class App extends React.Component {
       columns: [
         { title: 'Fecha de registro', field: 'data', filtering: false },
         { title: 'Nombre de la institución', field: 'name', filtering: false },
-        { title: 'Programa de fortalecimiento', field: 'program' },
+        { title: 'Programa de fortalecimiento', field: 'program', filtering: false },
         {
           title: 'Estado',
           field: 'status',
@@ -32,7 +32,7 @@ export default class App extends React.Component {
             6: 'Reporte enviado',
           },
         },
-        { title: 'Persona de contacto', field: 'person' },
+        { title: 'Persona de contacto', field: 'person', filtering: false },
         { title: 'Correo', field: 'email', filtering: false },
       ],
       data: [
@@ -175,6 +175,14 @@ export default class App extends React.Component {
             searchFieldAlignment: 'left',
             showTitle: false,
             filtering: true,
+            searchFieldStyle: {
+              height: '40px',
+              width: '230px',
+              borderRadius: '4px',
+              backgroundColor: '#FFF',
+              boxShadow: '0 3px 15px 0 rgba(161,160,160,0.5)',
+              paddingLeft: '10px'
+            }
           }}
           localization={{
             body: {
