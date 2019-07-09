@@ -16,142 +16,56 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: [
-        { title: 'Fecha de registro', field: 'data', filtering: false },
-        { title: 'Nombre de la institución', field: 'name', filtering: false },
-        { title: 'Programa de fortalecimiento', field: 'program', filtering: false },
-        {
-          title: 'Estado',
-          field: 'status',
-          lookup: {
-            1: 'Nuevo aspirante',
-            2: 'Esperando ficha',
-            3: 'Esperando descriptores',
-            4: 'Esperando evidencias',
-            5: 'Redactando reporte',
-            6: 'Reporte enviado',
-          },
-        },
-        { title: 'Persona de contacto', field: 'person', filtering: false },
-        { title: 'Correo', field: 'email', filtering: false },
-      ],
-      data: [
-        {
-          data: '05/06/19',
-          name: 'Fundacion Merced',
-          program: 'Propio',
-          status: 1,
-          person: 'Ana Ruíz Camacho',
-          email: 'correo@ejemplo.mx',
-        },
-        {
-          data: '05/06/19',
-          name: 'Fundacion MacBook',
-          program: 'Propio',
-          status: 2,
-          person: 'Ana Ruíz Camacho',
-          email: 'correo@ejemplo.mx',
-        },
-        {
-          data: '05/06/19',
-          name: 'Fundacion Perez',
-          program: 'Propio',
-          status: 1,
-          person: 'Ana Ruíz Camacho',
-          email: 'correo@ejemplo.mx',
-        },
-        {
-          data: '05/06/19',
-          name: 'Fundacion ',
-          program: 'Propio',
-          status: 4,
-          person: 'Ana Ruíz Camacho',
-          email: 'correo@ejemplo.mx',
-        },
-        {
-          data: '05/06/19',
-          name: 'Fundacion Merced',
-          program: 'Propio',
-          status: 5,
-          person: 'Ana Ruíz Camacho',
-          email: 'correo@ejemplo.mx',
-        },
-        {
-          data: '05/06/19',
-          name: 'Fundacion Merced',
-          program: 'Propio',
-          status: 5,
-          person: 'Ana Ruíz Camacho',
-          email: 'correo@ejemplo.mx',
-        },
-        {
-          data: '05/06/19',
-          name: 'Fundacion Merced',
-          program: 'Propio',
-          status: 6,
-          person: 'Ana Ruíz Camacho',
-          email: 'correo@ejemplo.mx',
-        },
-        {
-          data: '05/06/19',
-          name: 'Fundacion Merced',
-          program: 'Propio',
-          status: 3,
-          person: 'Ana Ruíz Camacho',
-          email: 'correo@ejemplo.mx',
-        },
-        {
-          data: '05/06/19',
-          name: 'Fundacion Merced',
-          program: 'Propio',
-          status: 4,
-          person: 'Ana Ruíz Camacho',
-          email: 'correo@ejemplo.mx',
-        },
-        {
-          data: '05/06/19',
-          name: 'Fundacion Merced',
-          program: 'Propio',
-          status: 2,
-          person: 'Ana Ruíz Camacho',
-          email: 'correo@ejemplo.mx',
-        },
-        {
-          data: '05/06/19',
-          name: 'Fundacion Merced',
-          program: 'Propio',
-          status: 1,
-          person: 'Ana Ruíz Camacho',
-          email: 'correo@ejemplo.mx',
-        },
-        {
-          data: '05/06/19',
-          name: 'Fundacion Merced',
-          program: 'Propio',
-          status: 5,
-          person: 'Ana Ruíz Camacho',
-          email: 'correo@ejemplo.mx',
-        },
-        {
-          data: '05/06/19',
-          name: 'Fundacion ',
-          program: 'Propio',
-          status: 2,
-          person: 'Ana Ruíz Camacho',
-          email: 'correo@ejemplo.mx',
-        },
-        {
-          data: '05/06/19',
-          name: 'Fundacion Merced',
-          program: 'Propio',
-          status: 4,
-          person: 'Ana Ruíz Camacho',
-          email: 'correo@ejemplo.mx',
-        },
-      ],
+      columns: [],
+      data: [],
     };
   }
-
+  columns = [
+    { title: 'Fecha de registro', field: 'fecha', filtering: false },
+    { title: 'Nombre de la institución', field: 'nombreInstitucion', filtering: false },
+    { title: 'Programa de fortalecimiento', field: 'programaFortalecimiento', filtering: false },
+    {
+      title: 'Estado',
+      field: 'status',
+      lookup: {
+        0: 'aspirant',
+      },
+    },
+    { title: 'Persona de contacto', field: 'nombreContacto', lookup:{1: 'Ana Ruiz Camacho'}},
+    { title: 'Correo', field: 'emailContacto', filtering: false },
+  ]
+  getFoundations = async () => {
+    let h = new Headers()
+    h.append('Authorization','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkMTBmM2VlMzAwMDE0MDMxYzY1ZTNhZCIsImlhdCI6MTU2MTQ4MzYyMn0.xFSfSlZT010DlUYi8WfSEeCXuKJxLvUVJWx86T2aq7A')
+    let req = new Request('https://funmern.herokuapp.com'+'/admin/list/all',{
+      headers: h
+    })
+    const api_fetch = await fetch(req)
+    const fundaciones = await api_fetch.json()
+    let list = fundaciones.payload
+    let statusArray = list.map( (array,index) => {
+        return array.status
+    })
+    console.log(statusArray)
+    let statusList= [...new Set(statusArray)]
+    let newList = list.map( element => {
+      let object = {}
+      let newIndex = statusList.findIndex( (elementComp) => {
+        return element.status===elementComp})
+      object = {...element, status:newIndex+1 }
+      return object
+    })
+    console.log(newList)
+    this.columns[3].lookup = statusList.map((element,index)=>{
+      let currObjt={}
+      currObjt[index+1] = element
+      return currObjt
+    })[0]
+    this.setState({data: newList, columns: this.columns})
+  }
+  componentDidMount () {
+      this.getFoundations()
+  }
   render() {
     return (
       <div className="search-container">
